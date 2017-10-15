@@ -3,8 +3,9 @@ package characterSheet;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 /**
@@ -15,6 +16,7 @@ public class Main extends Application{
 
     Stage window;
     Scene scene;
+    GridPane grid;
 
     public static void main (String[] args) {
         launch(args);
@@ -25,13 +27,18 @@ public class Main extends Application{
         window = primaryStage;
         window.setTitle("Ability Scores Example");
 
-        VBox vBox = new VBox(0);
-        vBox.setPadding(new Insets(0, 10, 0, 10));
+        grid = new GridPane();
+        grid.setPadding(new Insets(10, 10, 0, 10));
+        grid.setVgap(8);
+        grid.setHgap(10);
 
         //Top row labels
-        Label topLabel = new Label("    Score    Mod");
+        Label scoreLabel = new Label("Score");
+        GridPane.setConstraints(scoreLabel, 1, 0);
+        Label modLabel = new Label("Mod");
+        GridPane.setConstraints(modLabel, 2, 0);
 
-        //Add ability score fields
+        //Create ability score fields
         AbilityScoreBlock strBlock = new AbilityScoreBlock("STR");
         AbilityScoreBlock conBlock = new AbilityScoreBlock("CON");
         AbilityScoreBlock dexBlock = new AbilityScoreBlock("DEX");
@@ -39,14 +46,34 @@ public class Main extends Application{
         AbilityScoreBlock wisBlock = new AbilityScoreBlock("WIS");
         AbilityScoreBlock chaBlock = new AbilityScoreBlock("CHA");
 
-        //Add items to grid
-        vBox.getChildren().addAll(topLabel, strBlock.getGrid(), conBlock.getGrid(), dexBlock.getGrid(),
-                intBlock.getGrid(), wisBlock.getGrid(), chaBlock.getGrid());
+        // Add AbilityScoreBlocks to Grid
+        addAbilityScoreBlockToGrid(strBlock, 1);
+        addAbilityScoreBlockToGrid(conBlock, 2);
+        addAbilityScoreBlockToGrid(dexBlock, 3);
+        addAbilityScoreBlockToGrid(intBlock, 4);
+        addAbilityScoreBlockToGrid(wisBlock, 5);
+        addAbilityScoreBlockToGrid(chaBlock, 6);
 
-        scene = new Scene(vBox, 400, 350);
+
+        //Add 'More Details' Button
+        Button moreDetailsButton = new Button("More Details");
+        GridPane.setConstraints(moreDetailsButton, 2, 7);
+
+        //Add misc items
+        grid.getChildren().addAll(scoreLabel, modLabel, moreDetailsButton);
+
+
+        scene = new Scene(grid, 400, 350);
         window.setScene(scene);
         window.show();
 
+    }
+
+    private void addAbilityScoreBlockToGrid(AbilityScoreBlock asb, int row) {
+        GridPane.setConstraints(asb.getLabel(), 0, row);
+        GridPane.setConstraints(asb.getScoreField(), 1, row);
+        GridPane.setConstraints(asb.getModifierField(), 2, row);
+        grid.getChildren().addAll(asb.getLabel(), asb.getScoreField(), asb.getModifierField());
     }
 
 }

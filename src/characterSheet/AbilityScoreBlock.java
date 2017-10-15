@@ -2,8 +2,6 @@ package characterSheet;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Insets;
-import javafx.scene.layout.GridPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -16,30 +14,25 @@ import javafx.scene.control.TextField;
  */
 public class AbilityScoreBlock {
 
-    private GridPane grid;
+    private Label label;
+    private IntField scoreField;
+    private TextField modifierField;
 
     public AbilityScoreBlock(String name) {
-        grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 0, 10));
-        grid.setVgap(8);
-        grid.setHgap(10);
 
         //Label
-        Label label = new Label(name);
-        GridPane.setConstraints(label, 0, 0);
+        label = new Label(name);
 
         //Ability Score Field
-        IntField scoreField = new IntField();
+        scoreField = new IntField();
         scoreField.setMaxWidth(35);
         scoreField.setPromptText("10");
-        GridPane.setConstraints(scoreField, 1, 0);
 
         //Ability Score Modifier Field
-        TextField modifierField = new TextField();
+        modifierField = new TextField();
         modifierField.setMaxWidth(35);
         modifierField.setPromptText("0");
         modifierField.setEditable(false);
-        GridPane.setConstraints(modifierField, 2, 0);
 
         /**
          * checks for changes in the ability score field and updates the ability
@@ -51,8 +44,6 @@ public class AbilityScoreBlock {
                 modifierField.setText(calculateModifier(scoreField.getText()));
             }
         });
-
-        grid.getChildren().addAll(label, scoreField, modifierField);
     }
 
     private String calculateModifier(String score) {
@@ -64,11 +55,10 @@ public class AbilityScoreBlock {
         return Integer.toString(modifierVal);
     }
 
-    /**
-     * A getter for the grid is necessary for adding the AbilityScoreBlocks to other layouts
-     * @return the grid layout containing the label and fields for the ability score
-     */
-    public GridPane getGrid() {
-        return grid;
-    }
+
+    public Label getLabel() { return label; }
+
+    public IntField getScoreField() { return scoreField; }
+
+    public TextField getModifierField() { return modifierField; }
 }
