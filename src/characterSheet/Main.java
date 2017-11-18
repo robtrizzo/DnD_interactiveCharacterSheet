@@ -8,15 +8,20 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 /**
  * Created by Robert on 10/14/2017.
  * Creates the window for ability scores and adds the relevant layouts
  */
 public class Main extends Application{
 
-    Stage window;
-    Scene scene;
-    GridPane grid;
+    Stage window, abilityScoreWindow;
+    Scene scene, abilityScoreScene;
+    GridPane grid, abilityScoreWindowGrid;
+    AbilityScoreDetailWindow abilityScoreDetailWindow;
+
+    ArrayList<AbilityScoreBlock> scoreArray = new ArrayList<AbilityScoreBlock>();
 
     public static void main (String[] args) {
         launch(args);
@@ -54,15 +59,37 @@ public class Main extends Application{
         addAbilityScoreBlockToGrid(wisBlock, 5);
         addAbilityScoreBlockToGrid(chaBlock, 6);
 
+        // Add AbilityScoreBlocks to ArrayList
+        scoreArray.add(strBlock);
+        scoreArray.add(conBlock);
+        scoreArray.add(dexBlock);
+        scoreArray.add(intBlock);
+        scoreArray.add(wisBlock);
+        scoreArray.add(chaBlock);
 
         //Add 'More Details' Button
         Button moreDetailsButton = new Button("More Details");
+        moreDetailsButton.setOnAction( e -> {
+            if (abilityScoreDetailWindow == null) {
+                abilityScoreDetailWindow = new AbilityScoreDetailWindow(scoreArray);
+                abilityScoreDetailWindow.updateTotalScores(strBlock.getTotalScoreField().getText(), conBlock.getTotalScoreField().getText(),
+                        dexBlock.getTotalScoreField().getText(), intBlock.getTotalScoreField().getText(),
+                        wisBlock.getTotalScoreField().getText(), chaBlock.getTotalScoreField().getText());
+                abilityScoreDetailWindow.showWindow();
+            }
+            abilityScoreDetailWindow.updateTotalScores(strBlock.getTotalScoreField().getText(), conBlock.getTotalScoreField().getText(),
+                    dexBlock.getTotalScoreField().getText(), intBlock.getTotalScoreField().getText(),
+                    wisBlock.getTotalScoreField().getText(), chaBlock.getTotalScoreField().getText());
+            abilityScoreDetailWindow.getWindow().show();
+        });
         GridPane.setConstraints(moreDetailsButton, 2, 7);
 
         //Add misc items
         grid.getChildren().addAll(scoreLabel, modLabel, moreDetailsButton);
 
 
+        window.setX(200);
+        window.setY(200);
         scene = new Scene(grid, 400, 350);
         window.setScene(scene);
         window.show();
@@ -71,9 +98,9 @@ public class Main extends Application{
 
     private void addAbilityScoreBlockToGrid(AbilityScoreBlock asb, int row) {
         GridPane.setConstraints(asb.getLabel(), 0, row);
-        GridPane.setConstraints(asb.getScoreField(), 1, row);
+        GridPane.setConstraints(asb.getTotalScoreField(), 1, row);
         GridPane.setConstraints(asb.getModifierField(), 2, row);
-        grid.getChildren().addAll(asb.getLabel(), asb.getScoreField(), asb.getModifierField());
+        grid.getChildren().addAll(asb.getLabel(), asb.getTotalScoreField(), asb.getModifierField());
     }
 
 }
